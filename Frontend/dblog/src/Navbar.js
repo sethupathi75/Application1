@@ -1,35 +1,50 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from "axios";
 
 const Navbar = () => {
 
-    const[add,setAdd]=useState(0)
-    const [blogs,setBlog]=useState([
-        {'Name':'Sethu','Age':20},
-        {'Name':'Raja','Age':30},
-        {'Name':'Mani','Age':18}
-    ])
-    const handleClick =(name,e) =>{
-       setAdd(add+10)
-       blogs.map((blog)=>{
-        if (blog.Name=='Sethu'){
-            setBlog[(blog.Age=blog.Age+10)]
+    const[ISpending,setIspending]=useState(true)
+    const [blogs,setBlog]=useState()
 
-        }
+    useEffect(()=>{
+        axios.get("https://api-service-6zss.onrender.com/get")
+        .then(res=>{
+            console.log(res.data)
+            return res.data
+        })
+        // .then(data=>{
+        //     // setBlog(data)
+        //     // setIspending(false)
+        //     console.log(data)
+        // })
+    },[])
+    
+    // console.log('sethu')
+    // const handleClick =(name,e) =>{
+    //    setAdd(add+10)
+    //    blogs.map((blog)=>{
+    //     if (blog.Name=='Raja'){
+    //         setBlog[(blog.Age=blog.Age+10)]
+
+    //     }
         
-       })
-    }
+    //    })
+    // }
     return ( 
-        <dev>
-            <dev>Class</dev>
-        <button onClick={(e)=>handleClick('sethu',e)}>click me {add} times</button>
-        {blogs.map((blog) => (
+       <div>
+        {ISpending && <div>Loading....</div>}
+        {blogs && <div>
+            {/* <dev>Class</dev>
+        <button onClick={(e)=>handleClick('sethu',e)}>click me {add} times</button> */}
+        {blogs.map(blog => (
             <div>
-                <h2>{blog.Name}</h2>
-                <p>{blog.Age}</p>
+                <h2>{blog.title}</h2>
+                <p>{blog.description}</p>
 
             </div>
     ))}
-        </dev>
+        </div>}
+        </div>
         
 
      );
