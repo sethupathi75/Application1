@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from "axios";
 
-const Navbar = () => {
+const Content = () => {
 
     const[ISpending,setIspending]=useState(true)
     const [blogs,setBlog]=useState()
@@ -12,6 +12,7 @@ const Navbar = () => {
             console.log(res.data)
             return res.data
         })
+        
         // .then(data=>{
         //     // setBlog(data)
         //     // setIspending(false)
@@ -50,4 +51,4 @@ const Navbar = () => {
      );
 }
  
-export default Navbar;
+export default Content;
