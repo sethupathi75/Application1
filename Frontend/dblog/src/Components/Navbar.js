@@ -7,9 +7,9 @@ const Navbar = () => {
     return ( 
         <>
         {/* <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded">Larger shadow</div> */}
-        <div className='container-fuild bg-primary pt-2 shadow-sm'>
+        <div className='container-fluid bg-primary pt-2 shadow-sm'>
             <div className='row'>
-            <div className='col'>
+            <div className='col-4'>
             <nav class="navbar navbar-expand-lg ">
             <ul className="navbar-nav mb-1 ">
                 <li className="nav-item">
@@ -32,7 +32,7 @@ const Navbar = () => {
             </form>
             </div>
             
-            <div className='col-4'>
+            <div className='col-4 justfy-content-end'>
             <button className='btn btn-success rounded-pill me-2 '>
                     Login
             </button>
