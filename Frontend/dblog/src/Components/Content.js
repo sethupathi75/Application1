@@ -1,50 +1,35 @@
 import { useEffect, useState } from 'react'
-// import axios from "axios";s
+import Login from './Login';
+
+import axios from "axios";
+import { useLocation } from 'react-router-dom';
+
 
 const Content = () => {
-
-    const[ISpending,setIspending]=useState(true)
-    const [blogs,setBlog]=useState()
+    const[Slogin,setSlogin]=useState(false)
+    const location=useLocation()
+    const [Error,setError]=useState()
+    console.log(location.state)
 
     useEffect(()=>{
-        axios.get("https://api-service-6zss.onrender.com/get")
-        .then(res=>{
-            console.log(res.data)
-            return res.data
-        })
-        
-        // .then(data=>{
-        //     // setBlog(data)
-        //     // setIspending(false)
-        //     console.log(data)
-        // })
-    },[])
-    
-    // console.log('sethu')
-    // const handleClick =(name,e) =>{
-    //    setAdd(add+10)
-    //    blogs.map((blog)=>{
-    //     if (blog.Name=='Raja'){
-    //         setBlog[(blog.Age=blog.Age+10)]
+      if (location.state==null){
+        setSlogin(false)
+      }
+      else{
+        // console.log(location)
+      setSlogin(location.state.isLogin)
+      setError(location.state.msg)
+      }
+      // console.log(location.state)
+      
+    })
 
-    //     }
-        
-    //    })
-    // }
     return ( 
+      
        <div>
-        {ISpending && <div>Loading....</div>}
-        {blogs && <div>
-            {/* <dev>Class</dev>
-        <button onClick={(e)=>handleClick('sethu',e)}>click me {add} times</button> */}
-        {blogs.map(blog => (
-            <div>
-                <h2>{blog.title}</h2>
-                <p>{blog.description}</p>
 
-            </div>
-    ))}
-        </div>}
+        {Slogin ? <div>success</div> : <Login msg={Error} / >}
+        
         </div>
         
 
