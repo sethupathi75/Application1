@@ -3,6 +3,7 @@ import Login from './Components/Login';
 import Content from './Components/Content';
 import {Routes,Route} from 'react-router-dom'
 import NotFound from './Components/NotFound';
+import  "./App.css"
 // import Content from './Components/Content';
 
 
@@ -12,11 +13,11 @@ function App() {
    
     <div className="App">
      
-      {/* <Navbar/> */}
+        {/* <Navbar/>  */}
       
       <Routes>
-        <Route path='/' element={<Navbar />} />
-        <Route path='/Login' element={<Login />} />
+        {/* <Route path='/' element={<Navbar />} /> */}
+        <Route path='/' element={<Login />} />
         <Route exact path='/Content' element={<Content />} />
         <Route path='/*' element={<NotFound />} />
       </Routes>

@@ -1,13 +1,15 @@
 import {useEffect, useState } from 'react'
 import Navbar from './Navbar'
+import {URL} from './URL'
 // import Login from './Login';
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
+import raja from '../App';
 const Login = (props) => {
 
 
 // state
-  const[ISpending,setIspending]=useState(false)
+  const[ISpending,setIspending]=useState(true)
   const[LoginRecord,setLoginRecord]=useState({
     "UserName":"",
     "Password":""
@@ -24,7 +26,7 @@ const Login = (props) => {
 
   const Nextpage=()=>{
     setFormPending(false)
-    axios.post("http://127.0.0.1:8000/Login",LoginRecord)
+    axios.post(URL+"Login",LoginRecord)
     .then(res=>{
       if (res.data["Err_Code"]==0){
         // setError(res.data["MSG"])
@@ -65,33 +67,43 @@ const Login = (props) => {
         <>
         {/* <Navbar /> */}
         
-        <p><strong>{props.msg}</strong></p>
+        {/* <p><strong></strong></p> */}
         <div className='container mt-5 pb-3 '>
             <div className="row  justify-content-center ">
                 {/* <div className="col-8 border border-1"> */}
                  {/* <div className="border border-1"> */}
 
                 
-                
+                {/* <h1 className="mystyle">Welcome</h1> */}
                 <div className="col-4 text-start border border-1 rounded-start-5 shadow-lg">
+
+                
+
                 <h5 className="text-center border-bottom mt-2 pb-3 rounded-pill shadow-sm">LOGIN</h5>
-                
-                
-                <label for="inputPassword5" className="form-label mt-5 " >UserName</label>
-                <input className="form-control rounded-pill " onChange={onType} placeholder='user' type="text" aria-label="default input example" />
+                <p className='text-center text-danger'>{props.msg}</p>
+                {/* <form> */}
+                <label for="inputPassword5" className="form-label mt-3 " >UserName</label>
+                <input className="form-control rounded-pill " onChange={onType} placeholder='user' type="mail" aria-label="default input example" />
                 
 
                 <label for="inputPassword5" className="form-label" >Password</label>
-                <input className="form-control rounded-pill mb-2" onChange={onType} placeholder='pass' type="possword" aria-label="default input example" />
+                <input className="form-control rounded-pill mb-2" onChange={onType}  placeholder='pass' type="possword" aria-label="default input example" />
                 <br></br>
-                <button onClick={Nextpage} className="btn btn-warning rounded-pill">Login</button>
-
+                
+                <button onClick={Nextpage}  className="btn d-flex btn-warning rounded-pill" >Login
                 {FormPending ? <div></div>: 
-                <div className='d-flex justify-content-center'>
-                <div className="spinner-border text-info " role="status">
+                <div className=' justify-content-center'>
+                <div className="spinner-border spin " role="status">
                 <span className="visually-hidden">Loading...</span>
                 </div>
                 </div>}
+                
+                </button>
+                
+               
+                
+                {/* </form> */}
+                
 
                 </div>
                 
