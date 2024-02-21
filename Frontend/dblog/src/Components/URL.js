@@ -1,3 +1,3 @@
-const URL="http://127.0.0.1:8000/"
+const URL="https://api-service-6zss.onrender.com/"
 
 export {URL}
