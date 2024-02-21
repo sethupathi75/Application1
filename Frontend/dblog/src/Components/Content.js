@@ -1,15 +1,14 @@
-import { useCallback, useEffect, useState } from 'react'
-import Login from './Login';
+import {  useEffect, useState } from 'react'
 import {URL} from './URL'
 import axios from "axios";
-import { useLocation,seNavigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import CreateRecord from './CreateRecord';
+
 
 
 const Content = () => {
-    const[Slogin,setSlogin]=useState(false)
-    const location=useLocation(true)
+    // const[Slogin,setSlogin]=useState(false)
+    // const location=useLocation(true)
     const navigate=useNavigate()
     const [Error,setError]=useState()
     const[records,setRecords]=useState()
@@ -91,7 +90,7 @@ const Content = () => {
       console.log(allData)
       allData.map((data,index)=>{
         if (data["pk"]===pk){
-          delete allData [index]
+          delete allData[index]
           // console.log(allData)
 
         }
@@ -149,7 +148,7 @@ const Content = () => {
     }
     
     )
-  }, 500);
+  }, 1000);
       
     //   axios.get(URL+"get")
     // .then(res=>{

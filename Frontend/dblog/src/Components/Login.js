@@ -1,10 +1,10 @@
 import {useEffect, useState } from 'react'
-import Navbar from './Navbar'
+// import Navbar from './Navbar'
 import {URL} from './URL'
 // import Login from './Login';
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
-import raja from '../App';
+import { useNavigate } from 'react-router-dom';
+// import raja from '../App';
 const Login = () => {
 
 

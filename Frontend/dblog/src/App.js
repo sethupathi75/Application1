@@ -1,4 +1,3 @@
-import Navbar from './Components/Navbar';
 import Login from './Components/Login';
 import Content from './Components/Content';
 import {Routes,Route} from 'react-router-dom'
