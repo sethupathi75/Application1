@@ -2,19 +2,20 @@ import { useCallback, useEffect, useState } from 'react'
 import Login from './Login';
 import {URL} from './URL'
 import axios from "axios";
-import { useLocation } from 'react-router-dom';
+import { useLocation,seNavigate, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import CreateRecord from './CreateRecord';
 
 
 const Content = () => {
     const[Slogin,setSlogin]=useState(false)
-    const location=useLocation()
+    const location=useLocation(true)
+    const navigate=useNavigate()
     const [Error,setError]=useState()
     const[records,setRecords]=useState()
     const[Loading,setLoading]=useState(false)
-    const[name,setName]=useState()
-    const[act_price,setActPrice]=useState()
-    const[Dis_Price,setDisPrice]=useState()
+    const[Isadmin,setIsadmin]=useState(false)
+    const[FetchLoading,setFetchLoading]=useState(true)
     const [edits,setEdit]=useState(false)
     const [allData,setAlldata]=useState()
     const [del,setDelete]=useState()
@@ -27,8 +28,7 @@ const Content = () => {
       console.log(res.data)
       setDelete(pk)
       setEdit(res.data)
-
-      console.log(del)
+      setFetchLoading(false)      
     })
     .catch(error=>{console.log(error)
       
@@ -38,19 +38,16 @@ const Content = () => {
       
     }
 
-
+ 
 
 
 
     const GetData=(search)=>{
-      setLoading(true)
-        // console.log('render')
+      setLoading(true)       
         axios.post(URL+"Search/name="+search)
         .then(res=>{
-            setRecords(res.data)
-            // console.log(res.data)
-            setLoading(false)
-            // return res.data
+            setRecords(res.data)          
+            setLoading(false) 
         })
         .catch(error=>{console.log(error)
         setRecords([{
@@ -66,22 +63,25 @@ const Content = () => {
 
 // ***************update*****************
 
-    const UpdateRecord=(e)=>{
-      
-      console.log(edits)
-      axios.put(URL+"put/"+edits['pk'],edits)
-      
-        .then(res=>{
-          setError(res.data)  
-          e.preventDefault()
-        }
-        )
-        .catch(error=>{console.log(error)
-        }
+    const UpdateRecord=  (e)=>{
 
-        )
-        
-    }
+         axios.put(URL+"put/"+edits['pk'],edits)
+          .then(res=>{
+             setError(res.data)
+             setFetchLoading(true)
+             
+          }
+          
+          )    
+}
+
+// const update= async (e)=>{
+//    const Urecord= await UpdateRecord()  
+//     // setTimeout(() => {
+//     //           e.preventDefault()
+              
+//     //          }, 500);
+// }
 
 
 // **********Delete*******
@@ -117,11 +117,13 @@ const Content = () => {
 //*******create*****
 
     const create=(e)=>{
-      allData.push(edits)
+      // e.preventDefault()
+      
       axios.post(URL+"post",edits)
       .then(res=>{
        setError(res.data)
-        e.preventDefault()
+      //  location.state="true"
+        // e.preventDefault()
       }
         
       
@@ -134,10 +136,12 @@ const Content = () => {
 
 
     useEffect(()=>{
-      axios.get(URL+"get")
+      setTimeout(() => {
+        axios.get(URL+"get")
     .then(res=>{
       setAlldata(res.data)
       console.log(res.data)
+      // setLoading(true)
       console.log("useeffect ran")
     })
     .catch(error=>{console.log(error)
@@ -145,23 +149,36 @@ const Content = () => {
     }
     
     )
+  }, 500);
+      
+    //   axios.get(URL+"get")
+    // .then(res=>{
+    //   setAlldata(res.data)
+    //   console.log(res.data)
+    //   console.log("useeffect ran")
+    // })
+    // .catch(error=>{console.log(error)
+      
+    // })
+    
+    
     },[Error])
 
 
 
-    useEffect(()=>{
-      if (location.state==null){
-        setSlogin(true)
-      }
-      else{
-        // console.log(location)
-      setSlogin(location.state.isLogin)
-      setError(location.state.msg)
-      }
-      // console.log(location.state)
-      
-    },
-    [])
+    useEffect(
+      () => {
+
+        if (sessionStorage.getItem('MSG')=='' || sessionStorage.getItem('MSG')==null){
+          navigate('/')
+        }
+        else{                 
+        setIsadmin(true)
+        }
+        }
+        
+      , 
+[])
 
     const onType=(e)=>{
       if (e.target.placeholder==='Product_Name'){
@@ -175,7 +192,6 @@ const Content = () => {
         // console.log(edits)
       }
       else if (e.target.placeholder==='Product_discounted_Price'){
-        
         setEdit({...edits,"P_Dis_Price":e.target.value})
       }
       // setEdit({"P_Name":"","P_Act_Price":"","P_Dis_Price":"","pk":""})
@@ -184,6 +200,7 @@ const Content = () => {
     
     function close(){
       setEdit({"P_Name":"","P_Act_Price":"","P_Dis_Price":"","pk":""})
+      setFetchLoading(true)
 
     }
 
@@ -195,16 +212,17 @@ const Content = () => {
        <div>
         
 
-        {
+        {/* {
           
-        Slogin ? 
-        <div>
+        Slogin ?
+        <div> */}
          <Navbar Fun={GetData}/>
-
+         <button className="btn btn-primary mt-3 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+  Create+</button>
           <div className='container-fluid'>
             <div className='row auto  mt-3'>
 
-            <div className='col-lg-6 col-sm-12 justify-content-center'>
+            <div className='col-lg-12 col-sm-12 justify-content-center'>
               
             
                 
@@ -213,9 +231,10 @@ const Content = () => {
                 <table className='table table-dark table-striped'>
                   <thead>
                     <tr>
-                      <th>Name</th>
+                      <th>Product Name</th>
                       <th>Discount Price</th>
                       <th>Actual Price</th>
+                      <th>Date</th>
                       <th>Edit Action </th>
                       <th>Delete Action </th>
                     </tr>
@@ -234,42 +253,56 @@ const Content = () => {
                     <td >{record.P_Name}</td>
                     <td >{record.P_Act_Price}</td>
                     <td >{record.P_Dis_Price}</td>
-                    <td><button className='btn btn-success' data-bs-target="#staticBackdrop" data-bs-toggle="modal"  onClick={()=>edit(record.pk)}>EDIT</button></td>
+                    <td >{record.C_Date}</td>
+                    {Isadmin?
+                    <>
+                    <td><button className='btn btn-success' data-bs-target="#staticBackdrop"  data-bs-toggle="modal"  onClick={()=>edit(record.pk)}>EDIT</button></td>
                     <td><button className='btn btn-danger' data-bs-target="#staticBackdropdelete" data-bs-toggle="modal" onClick={()=>setDelete(record.pk)} >DELETE</button></td>
-                  </tr>
+                    </>
+                    :<>
+                      <td><button className='btn btn-outline-success' disabled >EDIT</button></td>
+                    <td><button className='btn btn-outline-danger'  disabled >DELETE</button></td>
+                      
+                      </>
+                      }
+                    </tr>
                     )
 
                     )
                   }
                   </tbody>:
-                  <div className='text-center '>
+                  <tbody>
+                    <tr className='bg-light'>
+                      <td colSpan='6'>
+                      <div className='text-center'>
                   <div className="spinner-border spin " role="status">
                   <span className="visually-hidden">Loading...</span>
-                  </div> </div> }
+                  </div> </div>
+                      </td>
+                     
+                    </tr>
+                   
+                  </tbody>}
+                  
                 </table>
                 
 
                 </div>
 
                 <div className='col-lg-6 col-sm-12 text-center'>
-                  <form onSubmit={create}>
-                <strong><label for="inputPassword5" className="form-label mt-3 " >Product Name:</label></strong>
-                      <input className="form-control  rounded-pill "  placeholder='Product_Name' onChange={onType} type="text" Value={edits.P_Name}    />
-
-                      <strong><label for="inputPassword5" className="form-label mt-3 " >Product Actual Price:</label></strong>
-                      <input className="form-control rounded-pill "  placeholder='Product_Actual_Price' onChange={onType} type="text" Value={edits.P_Act_Price} />
-
-                      <strong><label for="inputPassword5" className="form-label mt-3 " >Product discounted Price:</label></strong>
-                      <input className="form-control rounded-pill "  placeholder='Product_discounted_Price' onChange={onType} type="text" Value={edits.P_Dis_Price} />
-
-                        <input type="submit" className="btn btn-success m-3 rounded-pill" value="create"/>
-                        </form>
+                  {/* {
+                    Loading? <div>complete</div> : <div>loading...</div>
+                  } */}
                         </div>
 
-                        {/* ()=>UpdateRecord(edits["pk"]) */}
+                       
                 
-              {/* {Loading && <h4 className='text-center text-primary'>loading...</h4> } */}
-                {records && <div className='col-lg-4 col-sm-12 text-center'>
+              
+
+{/* ******************Search TAB************** */}
+
+
+                {/* {records && <div className='col-lg-4 col-sm-12 text-center'>
 
                 <table className='table table-dark table-striped'>
                   <thead>
@@ -301,7 +334,7 @@ const Content = () => {
                   }
                   </tbody>}
                 </table>
-                </div>}
+                </div>} */}
                 
 
             </div>
@@ -310,10 +343,10 @@ const Content = () => {
 
           
 
-        </div> : 
+        {/* </div> :
         
-        <Login msg={Error} / >
-        }
+        <Login / >
+        } */}
         
 {/* <!-- Modal --> */}
                  <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -324,7 +357,7 @@ const Content = () => {
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={close}></button>
                       </div>
                       <form onSubmit={UpdateRecord}>
-                      <div className="modal-body">
+                      {FetchLoading? <h>Loading...</h>:<div className="modal-body">
                         
 
                       
@@ -337,7 +370,7 @@ const Content = () => {
                       <label for="inputPassword5" className="form-label mt-3 " >Product discounted Price:</label>
                       <input className="form-control rounded-pill "  placeholder='Product_discounted_Price' onChange={onType} type="text" Value={edits.P_Dis_Price} />
                       
-                      </div>
+                      </div>}
                       <div className="modal-footer">
                         {/* <button type="button" className="btn btn-success" data-bs-dismiss="modal"  onClick={create}>Create</button> */}
                         <button type="submit" className="btn btn-warning" data-bs-dismiss="modal" >update</button>
@@ -367,6 +400,34 @@ const Content = () => {
                     </div>
                   </div>
                 </div>
+
+
+
+   {/* *************canvas***********              */}
+{/* <CreateRecord /> */}
+
+<div className="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" >
+  <div className="offcanvas-header">
+    <h5 className="offcanvas-title" id="offcanvasWithBothOptionsLabel">Create Items</h5>
+    <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form onSubmit={create}>
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product Name:</label></strong>
+      <input className="form-control  rounded-pill "  placeholder='Product_Name' onChange={onType} type="text" Value={edits.P_Name}    />
+
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product Actual Price:</label></strong>
+      <input className="form-control rounded-pill "  placeholder='Product_Actual_Price' onChange={onType} type="text" Value={edits.P_Act_Price} />
+
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product discounted Price:</label></strong>
+      <input className="form-control rounded-pill "  placeholder='Product_discounted_Price' onChange={onType} type="text" Value={edits.P_Dis_Price} />
+
+      <input type="submit" className="btn btn-success m-3 rounded-pill" data-bs-dismiss="offcanvas" aria-label="Close" value="create"/>
+    </form>
+  </div>
+</div>
+
+
 
         </div>
         

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import axios from "axios";
-import { Link } from 'react-router-dom';
+import { useState } from 'react'
+// import axios from "axios";
+// import { Link } from 'react-router-dom';
 
 
 const Navbar = (props) => {
@@ -40,19 +40,19 @@ const Navbar = (props) => {
     
     return ( 
         <>
-          <div className='container-fluid  pt-2  Back shadow-sm'>
+          <div className='container-fluid  pt-2  bg-warning shadow-sm'>
             <div className='row '>
               <div className='col-4'>
                 <nav class="navbar navbar-expand-lg ">
                   <ul className="navbar-nav mb-1 ">
                       <li className="nav-item">
-                        <a className="nav-link text-light " aria-current="page" href="#">Home</a>
+                        <a className="nav-link text-light " aria-current="page" href='/content'>Home</a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link text-light" href="/">SITE</a>
+                        <a className="nav-link text-light" href='/content'>SITE</a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link text-light" >LEARN</a>
+                        <a className="nav-link text-light" href='/content'>LEARN</a>
                       </li>
                   </ul>
                 </nav>
@@ -68,7 +68,7 @@ const Navbar = (props) => {
               <div className='col-4 text-end p-2'>
                 <a href='/'>
                   <button className='btn btn-success rounded-pill me-2'>
-                          Login
+                          Logout <i class="fa fa-sign-out"></i>
                   </button>
                 </a>
             {/* <button className='btn btn-info rounded-pill '>

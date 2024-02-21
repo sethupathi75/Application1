@@ -39,16 +39,20 @@
 
 
 .Back  {
-  background-color: rgb(175, 77, 206);
+  background-color: rgb(200, 206, 77);
 
 }
 
 .spin {
   color: hwb(235 50% 0%);
-  width: 5rem;
-  height: 5rem;
+  width: 1rem;
+  height: 1rem;
 }
 .mystyle{
   color: green;
   font-size: 70px;
+}
+
+.font{
+  font-family: cursive;
 }
