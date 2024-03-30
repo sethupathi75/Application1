@@ -1,21 +1,22 @@
 import {useEffect, useState } from 'react'
 // import Navbar from './Navbar'
-import {URL} from './URL'
 // import Login from './Login';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+
 // import raja from '../App';
 const Login = () => {
 
 
 // state
-  const[ISpending,setIspending]=useState(true)
+  const[ISpending,setIspending]=useState(false)
   const[LoginRecord,setLoginRecord]=useState({
     "UserName":"",
     "Password":""
   })
  const [FormPending,setFormPending]=useState(true)
  const[error,setError]=useState()
+ const[passwordtype,setPasswordtype]=useState("password")
 
 
 // page navigation
@@ -28,7 +29,7 @@ const Login = () => {
   const Nextpage=()=>{
     setFormPending(false)
     if(LoginRecord.UserName!='' && LoginRecord.Password!=''){
-      axios.post(URL+"Login",LoginRecord)
+      axios.post(process.env.REACT_APP_URL+"Login",LoginRecord)
     .then(res=>{
       if (res.data["Err_Code"]==0){
         setError(res.data["MSG"])
@@ -62,6 +63,21 @@ const Login = () => {
 
   }
 
+
+  // *****togglePass********
+
+  const togglepass=()=>{
+    if (passwordtype==="password"){
+      setPasswordtype("text")
+    }
+    else{
+      setPasswordtype("password")
+    }
+
+
+  }
+
+
   useEffect(()=>{
     sessionStorage.clear()
   },[])
@@ -70,7 +86,7 @@ const Login = () => {
     if (e.target.placeholder==='user'){
       setLoginRecord({...LoginRecord,"UserName":e.target.value})
     }
-    else if (e.target.placeholder==='pass'){
+    else if (e.target.placeholder==='password'){
       setLoginRecord({...LoginRecord,"Password":e.target.value})
     }
    
@@ -93,11 +109,19 @@ const Login = () => {
                 <label for="inputPassword5" className="form-label font mt-3 " >UserName</label>
                 <input className="form-control mb-3 rounded-pill font" onChange={onType} placeholder='user'  type="mail" aria-label="default input example" />
                 
-
+              
                 <label for="inputPassword5" className="form-label font" >Password</label>
-                <input className="form-control rounded-pill mb-2 font" onChange={onType}  placeholder='pass' type="possword" aria-label="default input example" />
+                <div className='input-group'>
+                <input className="form-control inputvisi mb-2 font" onChange={onType}  placeholder='password' type={passwordtype} aria-label="default input example" />
+
+                <button className="btn btn-outline-secondary visible rounded-start" onClick={togglepass}>
+                {passwordtype==="password"?<i class="bi bi-eye-slash"></i>: <i class="bi bi-eye"></i>}
+                     </button>
+                     </div>
                 <br></br>
                 
+                
+
                 <button onClick={Nextpage}  className="btn d-flex btn-warning rounded-pill" >Login
                 {FormPending ? <div></div>: 
                 <div className=' justify-content-center'>

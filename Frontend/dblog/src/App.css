@@ -56,3 +56,26 @@
 .font{
   font-family: cursive;
 }
+
+.visible{
+  height: 20%;
+  border-radius: 50px;
+}
+
+.inputvisi{
+  border-radius: 50px;
+}
+
+.adjust{
+  justify-content: center;
+}
+
+.card_height1{
+  width: 80%;
+  height: 80%;
+}
+
+.image_size{
+  width: 100%;
+  height: 50%;
+}

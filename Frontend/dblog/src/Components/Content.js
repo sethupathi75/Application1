@@ -1,5 +1,4 @@
 import {  useEffect, useState } from 'react'
-import {URL} from './URL'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -16,13 +15,14 @@ const Content = () => {
     const[Isadmin,setIsadmin]=useState(false)
     const[FetchLoading,setFetchLoading]=useState(true)
     const [edits,setEdit]=useState(false)
+    const[ShopDettails,setShopDetails]=useState('')
     const [allData,setAlldata]=useState()
     const [del,setDelete]=useState()
     // console.log(location.state)
     // {{"P_Name":"","P_Act_Price":"","P_Dis_Price":""}
 
     const edit=(pk,e)=>{
-      axios.get(URL+"Edit/id="+pk)
+      axios.get(process.env.REACT_APP_URL+"Edit/id="+pk)
     .then(res=>{
       console.log(res.data)
       setDelete(pk)
@@ -43,7 +43,7 @@ const Content = () => {
 
     const GetData=(search)=>{
       setLoading(true)       
-        axios.post(URL+"Search/name="+search)
+        axios.post(process.env.REACT_APP_URL+"Search/name="+search)
         .then(res=>{
             setRecords(res.data)          
             setLoading(false) 
@@ -64,7 +64,7 @@ const Content = () => {
 
     const UpdateRecord=  (e)=>{
 
-         axios.put(URL+"put/"+edits['pk'],edits)
+         axios.put(process.env.REACT_APP_URL+"put/"+edits['pk'],edits)
           .then(res=>{
              setError(res.data)
              setFetchLoading(true)
@@ -97,7 +97,7 @@ const Content = () => {
 
       })
 
-        axios.delete(URL+"delete/"+pk)
+        axios.delete(process.env.REACT_APP_URL+"delete/"+pk)
         .then(res=>{
           setError(res.data)
           // setDelete(true)
@@ -118,7 +118,7 @@ const Content = () => {
     const create=(e)=>{
       // e.preventDefault()
       
-      axios.post(URL+"post",edits)
+      axios.post(process.env.REACT_APP_URL+"post",edits)
       .then(res=>{
        setError(res.data)
       //  location.state="true"
@@ -133,17 +133,41 @@ const Content = () => {
     }
 
 
+    const Shopupload=(e)=>{
+      e.preventDefault()
+      console.log(ShopDettails)
+      if (ShopDettails['Shop_Name']!=null && ShopDettails['Shop_owner']!=null && 
+      ShopDettails['Mobile_NO']!=null && ShopDettails['Shop_image']!=null && ShopDettails['Mobile_NO'].length==10 &&
+      ShopDettails['Shop_Name']!='' && ShopDettails['Shop_owner']!='' && 
+      ShopDettails['Mobile_NO']!='' && ShopDettails['Shop_image']!=''){
+
+      
+      axios.post(process.env.REACT_APP_URL+"upload/file",ShopDettails,{headers: {
+        'content-type': 'multipart/form-data'
+      }}).then((res)=>window.alert(res.data['MSG']))
+      .catch (err=>{window.alert('upload failed')
+    console.log(err)
+    })
+    // res.data['MSG']
+    }
+    else{
+      window.alert('Please Enter Something...')
+      
+    }
+    }
+
 
     useEffect(()=>{
       setTimeout(() => {
-        axios.get(URL+"get")
+        axios.get(process.env.REACT_APP_URL+"get")
     .then(res=>{
       setAlldata(res.data)
       console.log(res.data)
       // setLoading(true)
       console.log("useeffect ran")
     })
-    .catch(error=>{console.log(error)
+    .catch(error=>{console.log(error.message)
+      setError(error.message)
       
     }
     
@@ -161,7 +185,7 @@ const Content = () => {
     // })
     
     
-    },[Error])
+    },[])
 
 
 
@@ -169,7 +193,8 @@ const Content = () => {
       () => {
 
         if (sessionStorage.getItem('MSG')=='' || sessionStorage.getItem('MSG')==null){
-          navigate('/')
+          navigate('/content')
+          setIsadmin(true)
         }
         else{                 
         setIsadmin(true)
@@ -188,14 +213,31 @@ const Content = () => {
       else if (e.target.placeholder==='Product_Actual_Price'){
         
         setEdit({...edits,"P_Act_Price":e.target.value})
-        // console.log(edits)
+        
       }
       else if (e.target.placeholder==='Product_discounted_Price'){
         setEdit({...edits,"P_Dis_Price":e.target.value})
       }
-      // setEdit({"P_Name":"","P_Act_Price":"","P_Dis_Price":"","pk":""})
+
+      else if(e.target.placeholder==='Shop_Name'){
+            setShopDetails({...ShopDettails,"Shop_Name":e.target.value})
+      }
+      else if(e.target.placeholder==='Shop_Owner'){
+
+        setShopDetails({...ShopDettails,"Shop_owner":e.target.value})
+        
+      }
+      else if(e.target.placeholder==='Shop_Mobile'){
+        setShopDetails({...ShopDettails,"Mobile_NO":e.target.value})
+        
+      }
+      else if(e.target.placeholder==='Shop_image'){
+        setShopDetails({...ShopDettails,"Shop_image":e.target.files[0]})
+        
+      }
+      
     }
-    // console.log(edits)
+    
     
     function close(){
       setEdit({"P_Name":"","P_Act_Price":"","P_Dis_Price":"","pk":""})
@@ -217,7 +259,10 @@ const Content = () => {
         <div> */}
          <Navbar Fun={GetData}/>
          <button className="btn btn-primary mt-3 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-  Create+</button>
+  Create Items+</button>
+
+  <button className="btn btn-primary mt-3 mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#CreateProducts" aria-controls="offcanvasWithBothOptions">
+  Create Products+</button>
           <div className='container-fluid'>
             <div className='row auto  mt-3'>
 
@@ -244,7 +289,7 @@ const Content = () => {
                       allData.map(record=>
                       ((record.ERR_code==0)?
                         <tr>
-                      <td colSpan='2'>{record.ERR}</td>
+                      <td colSpan='5'>{record.ERR}</td>
                       
                     </tr>
           :
@@ -272,12 +317,13 @@ const Content = () => {
                   </tbody>:
                   <tbody>
                     <tr className='bg-light'>
-                      <td colSpan='6'>
+                      <td colSpan='5'>
                       <div className='text-center'>
                   <div className="spinner-border spin " role="status">
                   <span className="visually-hidden">Loading...</span>
                   </div> </div>
                       </td>
+                      <td colSpan='5'>{Error}</td>
                      
                     </tr>
                    
@@ -412,13 +458,13 @@ const Content = () => {
   </div>
   <div class="offcanvas-body">
     <form onSubmit={create}>
-      <strong><label for="inputPassword5" className="form-label mt-3 " >Product Name:</label></strong>
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product_Name</label></strong>
       <input className="form-control  rounded-pill "  placeholder='Product_Name' onChange={onType} type="text" Value={edits.P_Name}    />
 
-      <strong><label for="inputPassword5" className="form-label mt-3 " >Product Actual Price:</label></strong>
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product_Actual_Price</label></strong>
       <input className="form-control rounded-pill "  placeholder='Product_Actual_Price' onChange={onType} type="text" Value={edits.P_Act_Price} />
 
-      <strong><label for="inputPassword5" className="form-label mt-3 " >Product discounted Price:</label></strong>
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Product_discounted_Price</label></strong>
       <input className="form-control rounded-pill "  placeholder='Product_discounted_Price' onChange={onType} type="text" Value={edits.P_Dis_Price} />
 
       <input type="submit" className="btn btn-success m-3 rounded-pill" data-bs-dismiss="offcanvas" aria-label="Close" value="create"/>
@@ -426,6 +472,30 @@ const Content = () => {
   </div>
 </div>
 
+
+<div className="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="CreateProducts" >
+  <div className="offcanvas-header">
+    <h5 className="offcanvas-title" id="offcanvasWithBothOptionsLabel">Create Products</h5>
+    <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form onSubmit={Shopupload}>
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Shop Name</label></strong>
+      <input className="form-control  rounded-pill "  placeholder='Shop_Name' onChange={onType} type="text" Value={edits.P_Name}    />
+
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Shop Owner</label></strong>
+      <input className="form-control rounded-pill "  placeholder='Shop_Owner' onChange={onType} type="text" Value={edits.P_Act_Price} />
+
+      <strong><label for="inputPassword5" className="form-label mt-3 " >Shop Mobile No</label></strong>
+      <input className="form-control rounded-pill "  placeholder='Shop_Mobile' onChange={onType} type="text" Value={edits.P_Dis_Price} />
+
+      <strong><label for="inputPassword5"  className="form-label mt-3 " >Shop image</label></strong>
+      <input className="form-control rounded-pill "  placeholder='Shop_image' onChange={onType} type= "file" Value={edits.P_Dis_Price} />
+
+      <input type="submit" className="btn btn-success m-3 rounded-pill adjust" data-bs-dismiss="offcanvas" aria-label="Close" value="Submit"/>
+    </form>
+  </div>
+</div>
 
 
         </div>

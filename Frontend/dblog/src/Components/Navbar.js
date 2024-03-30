@@ -49,7 +49,7 @@ const Navbar = (props) => {
                         <a className="nav-link text-light " aria-current="page" href='/content'>Home</a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link text-light" href='/content'>SITE</a>
+                        <a className="nav-link text-light" href='/Shops'>SITE</a>
                       </li>
                       <li className="nav-item">
                         <a className="nav-link text-light" href='/content'>LEARN</a>
@@ -61,7 +61,7 @@ const Navbar = (props) => {
               <div className='col-4'>
                 <div className="d-flex p-2">
                   <input className="form-control me-2" type="search" placeholder="Search" onChange={Search} />
-                  <button className="btn btn-secondary" onClick={getData}>Search</button>
+                  <button className="btn btn-secondary disabled" onClick={getData}>Search</button>
                 </div>
               </div>
             
