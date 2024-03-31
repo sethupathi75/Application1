@@ -133,7 +133,7 @@ const Content = () => {
     }
 
 
-    const Shopupload=(e)=>{
+    const Shopupload= async (e)=>{
       e.preventDefault()
       console.log(ShopDettails)
       if (ShopDettails['Shop_Name']!=null && ShopDettails['Shop_owner']!=null && 
@@ -142,9 +142,9 @@ const Content = () => {
       ShopDettails['Mobile_NO']!='' && ShopDettails['Shop_image']!=''){
 
       
-      axios.post(process.env.REACT_APP_URL+"upload/file",ShopDettails,{headers: {
+     axios.post(process.env.REACT_APP_URL+"upload/file",ShopDettails,{headers: {
         'content-type': 'multipart/form-data'
-      }}).then((res)=>window.alert(res.data['MSG']))
+      }}).then(async (res)=>await window.alert(res.data['MSG']))
       .catch (err=>{window.alert('upload failed')
     console.log(err)
     })
