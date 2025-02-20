@@ -8,7 +8,7 @@ const Cab_login=()=>{
 const [Driver,setDriver]=useState('')
 const navigate=useNavigate()
 const[loading,setloading]=useState({"blur":"blur(0px)","pointer":"auto"})
-const theray_name=process.env.REACT_APP_CONS.split(",")
+// const theray_name=process.env.REACT_APP_CONS.split(",")
 
 // console.log(process.env.REACT_APP_CONS.split(","))
 // API integration
