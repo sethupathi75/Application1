@@ -39,6 +39,9 @@ const Navbar = (props) => {
     const getData=()=>{
       props.Fun(search)
     }
+    const logout=()=>{
+      sessionStorage.clear()
+    }
 
     const profile=()=>{
       switch (props.log){
@@ -59,7 +62,7 @@ const Navbar = (props) => {
           return <div>
             <button type="button" className="btn btn-lg rounded-pill btn-danger me-2" >{atob(sessionStorage.getItem('phoneNo'))}</button>
           <a href='/'>
-          <button className='btn btn-success rounded-pill me-2'>
+          <button onClick={logout} className='btn btn-success rounded-pill me-2'>
                   Logout <i class="fa fa-sign-out"></i>
           </button>
         </a>
