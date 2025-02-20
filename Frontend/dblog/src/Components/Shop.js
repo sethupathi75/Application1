@@ -21,7 +21,7 @@ const Shop=()=>{
 
     return(
         <>
-        <Navbar />
+        <Navbar color="#f9d805"/>
 
         <div className="container ">
             <div className="row my-3 gy-3">
